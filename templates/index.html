@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riff - Music Player</title>
+    <!-- Standard favicon for browsers -->
+    <link rel="icon" href="{{ url_for('static', filename='assets/site_logo.jpg') }}" type="image/x-icon">
+    <!-- Apple Touch Icon (iOS home screen) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='assets/site_logo.jpg') }}">
+
+    <!-- FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href=" {{ url_for('static' , filename='css/header-bar.css')}}">
+</head>
+<body>
+    <div class="header-bar">
+        <form action="/upload" method="POST" enctype="multipart/form-data" class="upload-form">
+            <input type="file" name="song" accept=".mp3" required style="display: none;" id="fileInput">
+            <img src="{{ url_for('static' , filename='assets/upload_icon.svg')}}" alt="upload" id="uploadIcon" class="icon-white">
+
+            <button type="submit" class="uploadbtn">Upload </button>
+        </form>
+        <div class="search-bar">
+            <!-- add on click for searchbtnbg -->
+            <div class="searchbtnbg">
+                <img id="searchIcon" src=" {{ url_for('static' , filename='assets/search_icon.svg')}} " alt="Search">
+            </div>
+            <input id="searchInput" class="search-text" type="text" placeholder="Search Song...">
+            <div id="clearSearch">✕</div>
+        </div>
+    </div>
+    <div class="main-view">
+        <div class="view-switcher-wrapper">
+            <div class="view-switcher">
+                <button class="view-btn active" id="songs-btn"> 
+                    Songs
+                </button>
+                
+                <button class="view-btn" id="playlists-btn">
+                    Playlists
+                </button>
+                <div class="indicator"></div>
+            </div>
+        </div>
+        <div class="song-list">
+            {% for song in songs %}
+            <div class="song-row" data-filename="{{ song }}" onclick="playSong('{{ song }}')">
+                <div class="playing-dot"></div>
+                <div class="song-alb" style="background-image: url('/static/cover/{{ song[:-4] }}.jpg')"
+                onerror="this.style.backgroundImage='url(/static/assets/def_cover.jpg)'"></div>
+                <div class="song" >
+                    {{ song[:-4] }}
+                    <!-- [:-4] for not writing the mp3 -->
+                </div>
+                
+                <div class="menu-wrapper">
+                    <div class="add-btn">
+                        +
+                    </div>
+                    <div class="song-menu"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="playlist-list">
+            {% for playlist in playlists %}
+            <div class="playlist-row">
+                {{ playlist }}
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+    {% include 'components/bottom-bar.html' %}
+
+    <audio id="audio"></audio>
+
+    <div id="songListEl" data-songs='{{ songs | tojson | safe }}'></div>     <!-- | tojson converts python objects to JS String -->
+
+
+</body>
+<!-- JS -->
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+<script src="{{ url_for('static', filename='js/player.js') }}"></script>
+</html>

@@ -1,0 +1,39 @@
+<link rel="stylesheet" href=" {{ url_for('static' , filename='css/bottom-bar.css')}}">
+    <div class="bottom-bar">
+    <div class="left"></div>
+    <div class="mid-controls">
+        <div class="mid-top-controls">
+            <div class="nextbtnbg" onclick="playPrev()">
+                <img id="prevIcon" src=" {{ url_for('static' , filename='assets/next_icon.svg')}}" alt="Previous">
+            </div>
+            <div class="playbtnbg" onclick="togglePlay()">
+                <img id="playIcon" src=" {{ url_for('static' , filename='assets/play_icon.svg') }}" alt="Play">
+                <img id="pauseIcon" src=" {{ url_for('static' , filename='assets/pause_icon.svg') }}" alt="Pause">
+            </div>
+            <div class="nextbtnbg" onclick="playNext()">
+                <img id="nextIcon" src=" {{ url_for('static' , filename='assets/next_icon.svg')}}" alt="Next">
+            </div>
+            <div id="loopbtnbg" onclick="toggleLoop()">
+                <img id="loopIcon" src=" {{ url_for('static' , filename='assets/loop_icon.svg')}}" alt="Loop">
+                <div id="activeLoopLogo"></div>
+            </div>
+        </div>
+
+        <div class="mid-bot-controls">
+            <div id="currentTime">0:00</div>
+            <div class="progress-container">
+                <input type="range" id="progress" min="0" max="100" value="0" step="0.01">
+                <div class="progress-filled"></div>
+            </div>
+            <div id="totalTime">0:00</div>
+        </div>
+    </div>
+    <div class="right-controls">
+        <img class="icon-white" id="soundonIcon" src=" {{ url_for('static' , filename='assets/soundon_icon.svg')}} " alt="SoundOn">
+        <img  class="icon-white" id="soundoffIcon" src=" {{ url_for('static' , filename='assets/soundoff_icon.svg')}} " alt="SoundOff">
+        <div class="volume-container">
+            <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
+            <div class="volume-filled"></div>
+        </div>
+    </div>
+</div>
