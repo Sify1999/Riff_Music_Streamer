@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="screenshots/banner.png" alt="Riff Banner" width="100%">
+  <img src="screenshots/Banner.png" alt="Riff Banner" width="100%">
 </p>
 
 <h1 align="center">🎵 Riff</h1>
@@ -80,13 +80,13 @@ http://127.0.0.1:5000
 
 > Add a screenshot here.
 
-![Home](screenshots/home.png)
+![Home](screenshots/Home.png)
 
 ### Playlist
 
 > Add a screenshot here.
 
-![Playlist](screenshots/playlist.png)
+![Playlist](screenshots/Playlist.png)
 
 ---
 
