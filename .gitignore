@@ -24,3 +24,15 @@ env/
 
 # Logs
 *.log
+    
+# Music files
+static/music/
+
+# Song covers
+static/cover/
+
+# Playlist covers
+static/playlist-cover/
+
+# Database
+database.db

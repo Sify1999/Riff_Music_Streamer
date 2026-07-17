@@ -19,16 +19,16 @@
 <body>
     <div class="top-view">
         <div class="playlist-header">
-            <img class="playlist-cover" src="{{ url_for('static' , filename='playlist-cover/' + playlist_name + '.jpg')}}" alt="playlist">
+            <img class="playlist-cover" src="{{playlist.cover}}" alt="playlist">
             <div class="playlist-info">
                 <div class="playlist-name">
-                    {{ playlist_name }}
+                    {{ playlist.name }}
                     
                 </div>
                 <div class="playlist-description">
-                    {{ playlist_description }}
+                    {{ playlist.description }}
                 </div>
-                <div class="playlist-play-btn" onclick="playSong('{{songs[0][0]}}')">
+                <div id="playlist-play-btn" >
                     <img class="playlist-play-icon" src="{{ url_for('static' , filename='assets/play_icon.svg')}}" alt="play">
                     <div class="playlist-play-text">Play</div>
                 </div>
@@ -36,25 +36,7 @@
         </div>
     </div>
     <div class="main-view">
-        <div class="detail-bar">
-            <div class="detail">#</div>
-            <div class="detail-title" >TITLE</div>
-            <div class="detail-artist">ARTIST</div>
-            <img class="detail-img" src="{{ url_for('static' , filename='assets/clock_icon.svg')}}" alt="Duration">
-            <div ></div>
-        </div>
-        <div class="song-list">
-            {% for song in songs %}
-            <div class="song-row" data-filename="{{ song[0] }}" onclick="playSong('{{song[0]}}')">
-                <div class="playing-dot"></div>
-                <div class="song-number"> {{ loop.index }} </div>
-                <img class="song-cover" src="{{ url_for('static' , filename='cover/' + song[0][:-4] + '.jpg') }}" alt="cover">
-                <div class="song-title"> {{ song[1] }}</div>
-                <div class="song-artist"> {{ song[2] }} </div>
-                <div class="song-duration"> {{ song[3] }} </div>
-            </div>
-            {% endfor %}
-        </div>
+        {% include "components/song-list.html" %}
     </div>
     {% include 'components/bottom-bar.html' %}
 
@@ -67,7 +49,7 @@
     
     <audio id="audio"></audio>
 
-    <div id="songListEl" data-songs='{{ song_files | tojson | safe }}'></div>     <!-- | tojson converts python objects to JS String -->
+    <div id="songListEl" data-songs='{{ songs | tojson | safe }}'></div>     <!-- | tojson converts python objects to JS String -->
 
 </body>
 <script src="{{ url_for('static', filename='js/player.js') }}"></script>

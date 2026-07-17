@@ -47,31 +47,22 @@
                 <div class="indicator"></div>
             </div>
         </div>
-        <div class="song-list">
-            {% for song in songs %}
-            <div class="song-row" data-filename="{{ song }}" onclick="playSong('{{ song }}')">
-                <div class="playing-dot"></div>
-                <div class="song-alb" style="background-image: url('/static/cover/{{ song[:-4] }}.jpg')"
-                onerror="this.style.backgroundImage='url(/static/assets/def_cover.jpg)'"></div>
-                <div class="song" >
-                    {{ song[:-4] }}
-                    <!-- [:-4] for not writing the mp3 -->
-                </div>
-                
-                <div class="menu-wrapper">
-                    <div class="add-btn">
-                        +
-                    </div>
-                    <div class="song-menu"></div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+        {% include "components/song-list.html" %}
         <div class="playlist-list">
             {% for playlist in playlists %}
-            <div class="playlist-row">
-                {{ playlist }}
-            </div>
+            <a href="{{ url_for('playlist_page', playlist_id=playlist.id) }}" class="playlist-card">
+                <div class="playlist-cover">
+                    <img
+                        src="{{ url_for('static', filename='playlist-cover/' + playlist.name + '.jpg') }}"
+                        alt="{{ playlist.name }}"
+                    >
+                </div>
+                <div class="playlist-info">
+                    <h3>{{ playlist.name }}</h3>
+                    <p>{{ playlist.song_count }} Songs</p>
+                </div>
+
+            </a>
             {% endfor %}
         </div>
 

@@ -1,0 +1,31 @@
+<link rel="stylesheet" href=" {{ url_for('static' , filename='css/song-list.css')}}">
+<div class="detail-bar" id="DetailBar">
+    <div class="detail">#</div>
+    <div class="detail-title" >TITLE</div>
+    <div class="detail-artist">ARTIST</div>
+    <img class="detail-img" src="{{ url_for('static' , filename='assets/clock_icon.svg')}}" alt="Duration">
+    <div ></div>
+</div>
+<div class="song-list">
+    {% for song in songs %}
+    <div class="song-row"
+         data-index="{{ loop.index0 }}"
+         data-filename="{{ song.filename }}">
+
+        <div class="playing-dot"></div>
+
+        <div class="song-number">{{ loop.index }}</div>
+
+        <img class="song-cover"
+             src="{{ song.cover }}"
+             alt="cover">
+
+        <div class="song-title">{{ song.title }}</div>
+
+        <div class="song-artist">{{ song.artist }}</div>
+
+        <div class="song-duration">{{ song.duration }}</div>
+
+    </div>
+    {% endfor %}
+</div>

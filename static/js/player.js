@@ -21,6 +21,26 @@ let currentSongIndex = -1;
 const loopActive = document.getElementById("activeLoopLogo")
 let positionInterval = null;
 let filteredSongs = [];
+const playlistPlayBtn = document.getElementById("playlist-play-btn");
+const barCover = document.getElementById("song-bg")
+const barTitle = document.getElementById("song-detail-name")
+const barArtist = document.getElementById("song-detail-artist")
+const bottomSongTitle = document.getElementById("song-detail-name")
+audio.volume = 0.5;
+volumeSlider.value = 0.5;
+lastVolume = 0.5;
+filledVol.style.width = "50%";
+
+
+
+if(playlistPlayBtn) {
+    playlistPlayBtn.addEventListener('click' , ()=>{
+        if(songs.length > 0){
+            playSong(songs[0]);
+        }
+    })
+}
+
 
 function initMediaSession() {
     if (!('mediaSession' in navigator)) return;
@@ -44,16 +64,16 @@ function initMediaSession() {
     navigator.mediaSession.setActionHandler('seekbackward', null);
 }
 
-function updateMediaMetadata(filename) {
+function updateMediaMetadata(song) {
     if (!('mediaSession' in navigator)) return;
 
     navigator.mediaSession.metadata = new MediaMetadata({
-        title: filename.replace('.mp3', ''),
-        artist: 'Unknown Artist',
+        title: song.title,
+        artist: song.artist,
         album: 'Riff',
         artwork: [
             {
-                src: `/static/cover/${filename.replace('.mp3', '')}.jpg`,
+                src: song.cover,
                 sizes: '512x512',
                 type: 'image/jpeg'
             }
@@ -68,12 +88,13 @@ audio.onpause = () => {
     pauseIcon.style.display = "none";
 };
 
-function playSong(filename) {
-    updateMediaMetadata(filename);
-    currentSong = filename;
+function playSong(song) {
+    updateMediaMetadata(song);
+    upadteBottomBar(song)
+    currentSong = song;
     const activeQueue = filteredSongs.length ? filteredSongs : songs;
-    currentSongIndex = activeQueue.indexOf(filename)
-    audio.src = `/stream/${filename}`;
+    currentSongIndex = activeQueue.indexOf(song)
+    audio.src = `/stream/${song.filename}`;
     audio.load();
     audio.pause();
     audio.play().then(() => {
@@ -82,10 +103,9 @@ function playSong(filename) {
 
     document.querySelectorAll(".song-row.playing").forEach(r => r.classList.remove("playing"));
 
-
     if( currentSongIndex > -1){
         const rowToPlay = document.querySelector(
-            `.song-row[data-filename="${filename}"]`
+            `.song-row[data-filename="${song.filename}"]`
         );
         if(rowToPlay) {
             rowToPlay.classList.add("playing");
@@ -112,7 +132,11 @@ audio.onplay = () => {
     startPositionSync();
 };
 
-
+songRows.forEach(row => {
+    row.addEventListener("click" , () => {
+        playSong(songs[row.dataset.index])
+    })
+})
 
 function startPositionSync() {
     if (!('mediaSession' in navigator)) return;
@@ -290,5 +314,35 @@ audio.ontimeupdate = () => {
     currentTimeEl.innerText = `${minutes}:${seconds}`;
 
 };
+
+function upadteBottomBar(song){
+    barTitle.textContent = song.title
+    barArtist.textContent = song.artist
+    barCover.src = song.cover    
+}
+
+if (bottomSongTitle) {
+    bottomSongTitle.addEventListener("click", scrollToCurrentSong);
+}
+
+function scrollToCurrentSong() {
+    if (!currentSong) return;
+
+    const row = document.querySelector(
+        `.song-row[data-filename="${currentSong.filename}"]`
+    );
+
+    if (!row) return;
+
+    row.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+    // Optional flash animation
+    row.classList.add("highlight-song");
+    setTimeout(() => row.classList.remove("highlight-song"), 1000);
+}
+
 
 initMediaSession();

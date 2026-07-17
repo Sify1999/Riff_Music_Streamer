@@ -13,18 +13,37 @@
     bottom: 15px;
 }
 
-.left{
+.left-controls{
     width: 300px;
     flex-shrink: 0;
     height: 100%;
+    /* background-color: red; */
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
+#song-bg{
+    width: 60px;
+    height: 60px;
+    margin-left: 20px;
+    border-radius: 15px;
+}
+
+#song-detail-artist{
+    color: rgba(255, 255, 255, 0.557);
+}
 .mid-controls {
     flex: 1;
     display: flex;
     justify-content: flex-start;
     height: 100%;
     flex-direction: column;
+}
+
+#song-detail-name:hover{
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 .mid-top-controls{  
@@ -161,7 +180,6 @@
     inset: 0;
     pointer-events: none;
 }
-
 
 .top-controls {
     display: flex;

@@ -9,7 +9,7 @@ let x_btn = null;
 const indicator = document.querySelector(".indicator");
 const songList = document.querySelector(".song-list");
 const playlistList = document.querySelector(".playlist-list");
-
+const detailBar = document.getElementById("DetailBar")
 
 
 songsBtn.addEventListener('click' , () => {
@@ -18,14 +18,16 @@ songsBtn.addEventListener('click' , () => {
     moveIndicator(songsBtn);
     songList.style.display = "block";
     playlistList.style.display = "none";
+    detailBar.style.display = "flex"
 })
 
 playlistsBtn.addEventListener('click' , () => {
     playlistsBtn.classList.add("active");
     songsBtn.classList.remove("active");
     moveIndicator(playlistsBtn);
-    playlistList.style.display = "block";
+    playlistList.style.display = "grid";
     songList.style.display=  "none";
+    detailBar.style.display = "none"
 })
 
 function moveIndicator(targetBtn){

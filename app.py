@@ -20,11 +20,11 @@ class DataBase:
 
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS songs (
-                       id INTEGER PRIMARY KEY AUTOINCREMENT ,   
-                       filename TEXT UNIQUE ,
-                       title TEXT UNIQUE ,
-                       artist TEXT ,
-                       duration TEXT 
+            id INTEGER PRIMARY KEY AUTOINCREMENT ,   
+            filename TEXT UNIQUE ,
+            title TEXT UNIQUE ,
+            artist TEXT ,
+            duration TEXT 
             )
         """)
         print("created songs table")
@@ -74,6 +74,56 @@ class DataBase:
         finally:
             conn.close()
 
+
+    def delete_playlist(self , playlist_id):
+        conn = self.connect()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("DELETE FROM playlist_songs WHERE playlist_id = ?",(playlist_id,))
+
+            cursor.execute("DELETE FROM playlists WHERE id = ?",(playlist_id,))
+
+            conn.commit()
+        finally:
+            conn.close()
+
+
+    def edit_playlist(self , playlist_id , new_name , new_description):
+        conn = self.connect()
+        cursor = conn.cursor()
+        try:
+            update = []
+            value = []
+
+            if new_name:
+                update.append("name = ?")
+                value.append(new_name)
+
+            if new_description:
+                update.append("description = ?")
+                value.append(new_description)
+
+            if not update:
+                return False
+
+            value.append(playlist_id)
+
+
+            query = f"""
+                UPDATE PLAYLISTS
+                SET {', '.join(update)}
+                WHERE id = ?
+                """
+
+            cursor.execute(query , value)
+            conn.commit()
+
+        except sqlite3.IntegrityError:
+            return False
+        
+        finally:
+            conn.close()
+
     def reset_tables(self):
         conn = self.connect()
         cursor = conn.cursor()
@@ -94,22 +144,115 @@ class DataBase:
         conn = self.connect()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT filename , artist , duration FROM songs")
-        rows = cursor.fetchall()
-        conn.close()
+        cursor.execute("""
+        SELECT filename, title, artist, duration
+        FROM songs
+        """)    
 
-        return rows
+        songs = [
+            {
+                "filename": row[0],
+                "title": row[1],
+                "artist": row[2],
+                "duration": row[3],
+                "cover": url_for(
+                    "static",
+                    filename=f"cover/{os.path.splitext(row[0])[0]}.jpg"
+                )
+            }
+            for row in cursor.fetchall()
+        ]
+
+        conn.close()
+        return songs
 
 
     def fetch_playlists(self):
         conn = self.connect()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT name FROM playlists")
+        cursor.execute("""
+            SELECT
+                playlists.id,
+                playlists.name,
+                playlists.description,
+                COUNT(playlist_songs.song_id) AS song_count
+            FROM playlists
+            LEFT JOIN playlist_songs
+                ON playlists.id = playlist_songs.playlist_id
+            GROUP BY playlists.id
+        """)
+
         rows = cursor.fetchall()
+
+        playlists = [
+            {
+                "id": row[0],
+                "name": row[1],
+                "description": row[2],
+                "song_count": row[3]
+            }
+            for row in rows
+]
         conn.close()
 
-        return rows
+        return playlists
+
+
+    def fetch_playlist_songs(self , playlist_id):
+        conn = self.connect()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT filename, title, artist, duration
+            FROM songs
+            JOIN playlist_songs 
+            ON songs.id = playlist_songs.song_id
+            WHERE playlist_songs.playlist_id = ?
+        """, (playlist_id,))
+
+
+        songs = [
+            {
+                "filename": row[0],
+                "title": row[1],
+                "artist": row[2],
+                "duration": row[3],
+                "cover": url_for(
+                    "static",
+                    filename=f"cover/{os.path.splitext(row[0])[0]}.jpg"
+                )
+            }
+            for row in cursor.fetchall()
+        ]
+
+        conn.close()
+
+        return songs
+
+    def fetch_playlist_details(self , playlist_id):
+        conn = self.connect()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT name, description 
+            FROM playlists
+            WHERE id = ?
+        """, (playlist_id,))
+
+        playlist = cursor.fetchone()
+
+        if playlist is None:
+            abort(404)
+
+        return {
+            "name": playlist[0],
+            "description": playlist[1], 
+            "cover": url_for(
+                    "static",
+                    filename=f"playlist-cover/{playlist[0]}.jpg"
+                )
+        }
 
 
 app = Flask(__name__)
@@ -129,11 +272,8 @@ def secure_filename_windows(filename):
 def index():
     print("LOADING INDEX")
     # List all mp3 files in music folder
-    song_rows = database.fetch_songs()
-    songs = [row[0] for row in song_rows]
-
-    playlist_rows = database.fetch_playlists()
-    playlists = [row[0] for row in playlist_rows]
+    songs = database.fetch_songs()
+    playlists = database.fetch_playlists()
 
 
     print("INDEX DONE")
@@ -247,34 +387,13 @@ def add_to_playlist():
 @app.route("/playlist/<int:playlist_id>")
 def playlist_page(playlist_id):
 
-    conn = database.connect()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT name , description FROM playlists
-        WHERE id = ?""" , (playlist_id,))
-
-    playlist = cursor.fetchone()
-    print(playlist)
-    if playlist is None:
-        abort(404)
-
-    cursor.execute("""
-        SELECT filename , title , artist , duration FROM songs
-        JOIN playlist_songs ON songs.id = playlist_songs.song_id
-        WHERE playlist_songs.playlist_id = ?""" , (playlist_id,))
-
-    songs = cursor.fetchall()
-    print(songs)
-    conn.close()
+    songs = database.fetch_playlist_songs(playlist_id)
+    playlist = database.fetch_playlist_details(playlist_id)
 
     return render_template(
         "playlist.html",
-        playlist_id = playlist_id,
-        playlist_name = playlist[0],
-        playlist_description = playlist[1],
-        songs = songs,
-        song_files = [song[0] for song in songs]
+        songs = songs ,
+        playlist = playlist
     )
 
 
