@@ -33,8 +33,7 @@ let shuffle = false;
 let shuffledQueue = [];
 const shuffleBtn = document.getElementById("shufflebtnbg");
 const playlistPopup = document.getElementById("playlistPopup");
-const playlistPopupList = document.querySelector(".playlist-popup-list");
-let popupLoaded = false;
+const playlistPopupList = document.querySelector(".playlist-popup-list");``
 let selectedSong = null;
 playlistPopup.dataset.song = "";
 
@@ -376,50 +375,39 @@ function scrollToCurrentSong() {
     row.classList.add("highlight-song");
     setTimeout(() => row.classList.remove("highlight-song"), 1000);
 }
-
 async function loadPlaylistPopup() {
-
-    if (popupLoaded) return;
-
     playlistPopupList.innerHTML = "";
 
-    const item = document.createElement("div");
-    item.className = "playlist-popup-item";
+    let playlists = [];
+    try {
+        const res = await fetch("/get_playlists");
+        playlists = await res.json();
+    } catch (err) {
+        console.error("Failed to load playlists", err);
+    }
 
-    item.innerHTML = `
-        <div class="playlist-popup-left">
+    playlists.forEach((pl) => {
+        const item = document.createElement("div");
+        item.className = "playlist-popup-item";
 
-            <img class="playlist-popup-cover" src="{{playlist.cover}}" alt="cover" onerror="this.src='/static/assets/def_cover.jpg'">
-
-            <div class="playlist-popup-text">
-
-                <div class="playlist-popup-name">
-                    {{playlist.name}}
+        item.innerHTML = `
+            <div class="playlist-popup-left">
+                <img class="playlist-popup-cover" src="${pl.cover}" alt="cover" onerror="this.src='/static/assets/def_cover.jpg'">
+                <div class="playlist-popup-text">
+                    <div class="playlist-popup-name">${pl.name}</div>
                 </div>
-
             </div>
+            <div class="playlist-popup-status">+</div>
+        `;
 
-        </div>
+        item.addEventListener("click", async () => {
+            await addToPlaylist(selectedSong.filename, pl.id);
+            playlistPopup.classList.remove("active");
+            playlistPopup.dataset.song = "";
+        });
 
-        <div class="playlist-popup-status">
-            +
-        </div>
-    `;
-
-    item.addEventListener("click", async () => {
-
-        await addToPlaylist(
-            selectedSong.filename,
-            playlist.id
-        );
-
-        playlistPopup.classList.remove("active");
-        playlistPopup.dataset.song = "";
+        playlistPopupList.appendChild(item);
     });
-
-    playlistPopupList.appendChild(item);
-
-    };
 
     // Add "Create Playlist" button
     const createItem = document.createElement("div");
@@ -427,55 +415,128 @@ async function loadPlaylistPopup() {
 
     createItem.innerHTML = `
         <div class="playlist-popup-left">
-
-            <div class="playlist-popup-icon">
-                +
-            </div>
-
+            <div class="playlist-popup-icon">+</div>
             <div class="playlist-popup-text">
-
-                <div class="playlist-popup-name">
-                    Create Playlist
-                </div>
-
+                <div class="playlist-popup-name">Create Playlist</div>
             </div>
-
         </div>
     `;
 
     createItem.addEventListener("click", () => {
-        // Open create playlist modal (to be implemented)
         openCreatePlaylistModal();
         playlistPopup.classList.remove("active");
         playlistPopup.dataset.song = "";
     });
 
     playlistPopupList.appendChild(createItem);
+}
 
-    popupLoaded = true;
+const createPlaylistOverlay = document.getElementById("createPlaylistOverlay");
+const coverUpload = document.getElementById("coverUpload");
+const coverInput = document.getElementById("coverInput");
+const coverPreview = document.getElementById("coverPreview");
+const coverPlaceholder = document.getElementById("coverPlaceholder");
+const playlistNameInput = document.getElementById("playlistNameInput");
+const playlistDescInput = document.getElementById("playlistDescInput");
+const descCharCount = document.getElementById("descCharCount");
+const confirmCreateBtn = document.getElementById("confirmCreatePlaylist");
+const cancelCreateBtn = document.getElementById("cancelCreatePlaylist");
+const closeCreateBtn = document.getElementById("closeCreatePlaylist");
+const createPlaylistError = document.getElementById("createPlaylistError");
+let selectedCoverFile = null;
 
 function openCreatePlaylistModal() {
-    // This will be implemented to show a modal for creating a new playlist
-    const playlistName = prompt("Enter playlist name:");
-    if (playlistName && playlistName.trim()) {
-        createPlaylist(playlistName.trim());
-    }
+    createPlaylistOverlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+    setTimeout(() => playlistNameInput.focus(), 50);
 }
 
-async function createPlaylist(name) {
-    const res = await fetch("/create_playlist", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ name: name })
-    });
-    
-    if (res.ok) {
-        // Reload the page to show the new playlist
-        window.location.reload();
-    }
+function closeCreatePlaylistModal() {
+    createPlaylistOverlay.classList.remove("active");
+    document.body.style.overflow = "";
+    playlistNameInput.value = "";
+    playlistDescInput.value = "";
+    descCharCount.textContent = "0";
+    coverPreview.src = "";
+    coverPreview.hidden = true;
+    coverPlaceholder.hidden = false;
+    selectedCoverFile = null;
+    confirmCreateBtn.disabled = true;
+    createPlaylistError.textContent = "";
 }
+
+coverUpload.addEventListener("click", () => coverInput.click());
+
+coverInput.addEventListener("change", () => {
+    const file = coverInput.files[0];
+    if (!file) return;
+    selectedCoverFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        coverPreview.src = e.target.result;
+        coverPreview.hidden = false;
+        coverPlaceholder.hidden = true;
+    };
+    reader.readAsDataURL(file);
+});
+
+playlistNameInput.addEventListener("input", () => {
+    confirmCreateBtn.disabled = playlistNameInput.value.trim().length === 0;
+    createPlaylistError.textContent = "";
+});
+
+playlistDescInput.addEventListener("input", () => {
+    descCharCount.textContent = playlistDescInput.value.length;
+});
+
+cancelCreateBtn.addEventListener("click", closeCreatePlaylistModal);
+closeCreateBtn.addEventListener("click", closeCreatePlaylistModal);
+
+createPlaylistOverlay.addEventListener("click", (e) => {
+    if (e.target === createPlaylistOverlay) closeCreatePlaylistModal();
+});
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && createPlaylistOverlay.classList.contains("active")) {
+        closeCreatePlaylistModal();
+    }
+});
+
+confirmCreateBtn.addEventListener("click", async () => {
+    const name = playlistNameInput.value.trim();
+    if (!name) return;
+
+    confirmCreateBtn.disabled = true;
+    confirmCreateBtn.textContent = "Creating...";
+    createPlaylistError.textContent = "";
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", playlistDescInput.value.trim());
+    if (selectedCoverFile) {
+        formData.append("cover", selectedCoverFile);
+    }
+
+    try {
+        const res = await fetch("/create_playlist", {
+            method: "POST",
+            body: formData
+        });
+
+        if (res.ok) {
+            window.location.reload();
+        } else {
+            const data = await res.json().catch(() => ({}));
+            createPlaylistError.textContent = data.error || "Couldn't create playlist.";
+            confirmCreateBtn.disabled = false;
+            confirmCreateBtn.textContent = "Create";
+        }
+    } catch (err) {
+        createPlaylistError.textContent = "Network error, try again.";
+        confirmCreateBtn.disabled = false;
+        confirmCreateBtn.textContent = "Create";
+    }
+});
 
 document.querySelectorAll(".add-btn").forEach((btn, index) => {
 

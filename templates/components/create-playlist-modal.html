@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/create-playlist-modal.css') }}">
+<div id="createPlaylistOverlay" class="modal-overlay">
+    <div class="create-playlist-modal">
+        <div class="modal-header">
+            <div class="modal-title">New Playlist</div>
+            <button class="modal-close" id="closeCreatePlaylist" aria-label="Close">✕</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="cover-upload" id="coverUpload">
+                <img id="coverPreview" class="cover-preview" src="" alt="" hidden>
+                <div class="cover-placeholder" id="coverPlaceholder">
+                    <img src="{{ url_for('static', filename='assets/upload_icon.svg') }}" alt="" class="cover-upload-icon">
+                    <span>Add cover</span>
+                </div>
+                <input type="file" id="coverInput" accept="image/*" hidden>
+            </div>
+
+            <div class="modal-fields">
+                <label class="field-label" for="playlistNameInput">Name</label>
+                <input type="text" id="playlistNameInput" class="field-input" placeholder="My Playlist" maxlength="60" autocomplete="off">
+
+                <label class="field-label" for="playlistDescInput">Description <span class="field-optional">(optional)</span></label>
+                <textarea id="playlistDescInput" class="field-textarea" placeholder="Give your playlist a vibe..." maxlength="200" rows="3"></textarea>
+                <div class="char-count"><span id="descCharCount">0</span>/200</div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <div class="modal-error" id="createPlaylistError"></div>
+            <button class="modal-btn modal-btn-cancel" id="cancelCreatePlaylist">Cancel</button>
+            <button class="modal-btn modal-btn-create" id="confirmCreatePlaylist" disabled>Create</button>
+        </div>
+    </div>
+</div>

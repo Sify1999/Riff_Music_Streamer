@@ -64,15 +64,17 @@ class DataBase:
             conn.close()
 
 
-    def add_playlist(self , playlist_name , playlist_description):
+    def add_playlist(self, playlist_name, playlist_description):
         conn = self.connect()
         try:
-            conn.execute("INSERT INTO playlists (name , description) VALUES (? , ?)" , (playlist_name , playlist_description))
+            conn.execute("INSERT INTO playlists (name , description) VALUES (? , ?)", (playlist_name, playlist_description))
             conn.commit()
+            return True
         except sqlite3.IntegrityError:
-            pass
+            return False
         finally:
             conn.close()
+
 
 
     def delete_playlist(self , playlist_id):
@@ -347,6 +349,10 @@ def upload_songs():
 
     return redirect(url_for("index"))
 
+@app.route("/get_playlists")
+def get_playlists():
+    return jsonify(database.fetch_playlists())
+
 @app.route("/add_to_playlist" , methods=["POST"])
 def add_to_playlist():
     data = request.json
@@ -376,16 +382,27 @@ def add_to_playlist():
     return jsonify({"success" : True})
 
 
-@app.route("/create_playlist" , methods=["POST"])
+PLAYLIST_COVER_FOLDER = "static/playlist-cover"
+
+@app.route("/create_playlist", methods=["POST"])
 def create_playlist():
-    data = request.json
-    name = data.get("name")
-    
+    name = request.form.get("name", "").strip()
+    description = request.form.get("description", "").strip()
+    cover = request.files.get("cover")
+
     if not name:
         return jsonify({"error": "name is required"}), 400
-    
-    database.add_playlist(name, "")
-    
+
+    os.makedirs(PLAYLIST_COVER_FOLDER, exist_ok=True)
+
+    success = database.add_playlist(name, description)
+    if not success:
+        return jsonify({"error": "A playlist with that name already exists"}), 409
+
+    if cover and cover.filename:
+        cover_path = os.path.join(PLAYLIST_COVER_FOLDER, f"{name}.jpg")
+        cover.save(cover_path)
+
     return jsonify({"success": True})
 
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riff - Music Player</title>
     <!-- Standard favicon for browsers -->
-    <link rel="icon" href="{{ url_for('static', filename='assets/site_logo.jpg') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='assets/site_logo.png') }}" type="image/x-icon">
     <!-- Apple Touch Icon (iOS home screen) -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='assets/site_logo.jpg') }}">
 
@@ -68,7 +68,7 @@
 
     </div>
     {% include 'components/bottom-bar.html' %}
-
+    {% include "components/create-playlist-modal.html" %}
     <audio id="audio"></audio>
 
     <div id="songListEl" data-songs='{{ songs | tojson | safe }}'></div>     <!-- | tojson converts python objects to JS String -->
