@@ -19,12 +19,21 @@
 </head>
 <body>
     <div class="header-bar">
-        <form action="/upload" method="POST" enctype="multipart/form-data" class="upload-form">
-            <input type="file" name="song" accept=".mp3" required style="display: none;" id="fileInput">
-            <img src="{{ url_for('static' , filename='assets/upload_icon.svg')}}" alt="upload" id="uploadIcon" class="icon-white">
+        <div class="upload-form">
 
-            <button type="submit" class="uploadbtn">Upload </button>
-        </form>
+            <button class="upload-btn-modern" id="openUpload">
+
+                <img 
+                src="{{ url_for('static', filename='assets/upload_icon.svg')}}"
+                class="upload-header-icon">
+
+                <span>
+                    Add Music
+                </span>
+
+            </button>
+
+        </div>
         <div class="search-bar">
             <!-- add on click for searchbtnbg -->
             <div class="searchbtnbg">
@@ -73,7 +82,62 @@
 
     <div id="songListEl" data-songs='{{ songs | tojson | safe }}'></div>     <!-- | tojson converts python objects to JS String -->
 
+    <div class="upload-modal" id="uploadModal">
 
+        <div class="upload-box">
+            <div class="upload-close" id="closeUpload">
+                ✕
+            </div>
+
+            
+            <h2>
+                Add music
+            </h2>
+            
+            <label class="upload-drop">
+                <img 
+                src="{{ url_for('static', filename='assets/upload_icon.svg')}}"
+                class="upload-big-icon"
+                id="uploadAnimation">
+
+                <div class="upload-drop-title">
+                    Drop MP3 here
+                </div>
+
+                <div class="upload-drop-subtitle">
+                    or click to browse
+                </div>
+
+                <input 
+                type="file"
+                id="songFile"
+                accept=".mp3"
+                hidden>
+
+            </label>
+
+
+            <div class="upload-progress-wrapper">
+
+                <div class="upload-progress-text">
+                    Uploading...
+                </div>
+                <div class="upload-progress">
+                    <div 
+                    class="upload-progress-fill"
+                    id="uploadProgress">
+                    </div>
+                </div>
+            </div>
+
+
+                <div id="uploadStatus">
+                </div>
+
+
+        </div>
+
+    </div>
 </body>
 <!-- JS -->
 <script src="{{ url_for('static', filename='js/index.js') }}"></script>

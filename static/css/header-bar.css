@@ -31,6 +31,343 @@
     margin-left: 20px;
 }
 
+.uploading{
+    animation: uploadPulse 1s infinite;
+}
+
+@keyframes uploadPulse{
+    0%{
+        transform: translateY(0);
+        opacity: .7;
+    }
+
+    50%{
+        transform: translateY(-6px);
+        opacity:1;
+    }
+
+    100%{
+        transform: translateY(0);
+        opacity:.7;
+    }
+}
+
+.upload-progress-wrapper{
+
+    margin-top:25px;
+
+}
+
+
+.upload-progress-text{
+
+    font-size:13px;
+
+    color:
+    rgba(255,255,255,.5);
+
+    margin-bottom:8px;
+
+    text-align:left;
+
+}
+
+
+.upload-progress{
+
+    width:100%;
+
+    height:8px;
+
+    background:
+    rgb(40,42,60);
+
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+}
+
+
+.upload-progress-fill{
+
+    height:100%;
+
+    width:0%;
+
+
+    background:
+    linear-gradient(
+        90deg,
+        rgb(148,92,245),
+        rgb(190,140,255)
+    );
+
+
+    border-radius:20px;
+
+
+    transition:
+    width .25s ease;
+
+}
+
+#uploadStatus{
+    margin-top: 5px;
+}
+.success{
+    animation: pop .3s ease;
+}
+
+@keyframes pop{
+    from{
+        transform:scale(.5);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+.upload-modal{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:5000;
+}
+
+
+.upload-modal.active{
+
+    display:flex;
+
+    animation:fadeIn .2s ease;
+
+}
+
+
+@keyframes fadeIn{
+
+    from{
+        opacity:0;
+    }
+
+    to{
+        opacity:1;
+    }
+
+}
+
+
+.upload-box{
+
+    width:350px;
+    padding:20px;
+    box-sizing:border-box;
+    background:rgb(27,29,43);
+
+    border-radius:18px;
+
+    text-align:center;
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,.5);
+
+}
+
+
+.upload-close{
+
+    text-align:right;
+
+    color:white;
+
+    opacity:.5;
+
+    cursor:pointer;
+
+}
+
+
+.upload-big-icon{
+
+    width:70px;
+
+    height:70px;
+
+    filter:invert(100%);
+
+    margin-top: 15px;
+}
+
+.upload-drop{
+
+    width:100%;
+    height:180px;
+
+    box-sizing:border-box;
+
+    margin-top:20px;
+
+    border:
+    1px dashed rgba(255,255,255,.3);
+
+    background:
+    rgba(148,92,245,.08);
+
+    border-radius:14px;
+
+
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:center;
+    gap: 10px;
+
+    cursor:pointer;
+
+    transition:.25s ease;
+
+}
+
+
+.upload-drop:hover{
+
+    background:
+    rgba(148,92,245,.18);
+
+    border-color:
+    rgb(148,92,245);
+
+    transform:translateY(-2px);
+
+}
+
+.upload-drop-title{
+
+    font-size:16px;
+
+    color:white;
+
+}
+
+
+.upload-drop-subtitle{
+
+    margin-top:8px;
+
+    font-size:12px;
+
+    color:
+    rgba(255,255,255,.5);
+
+}
+
+
+
+.upload-box h2{
+
+    margin:0px;
+
+}
+
+
+.upload-box p{
+
+    color:rgba(255,255,255,.5);
+
+}
+
+
+.uploading{
+
+    animation:uploadPulse 1s infinite;
+
+}
+
+.upload-btn-modern{
+
+    height:40px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    margin-left:20px;
+
+    padding:0 16px;
+
+
+    background:
+    linear-gradient(
+        135deg,
+        rgb(148,92,245),
+        rgb(100,40,200)
+    );
+
+
+    color:white;
+
+    border:none;
+
+    border-radius:12px;
+
+
+    font-family:"Cal Sans", sans-serif;
+
+    font-size:15px;
+
+
+    cursor:pointer;
+
+
+    transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    filter .2s ease;
+
+}
+
+
+.upload-btn-modern:hover{
+
+    transform:translateY(-2px);
+
+    filter:brightness(1.15);
+
+
+    box-shadow:
+    0 8px 25px rgba(148,92,245,.35);
+
+}
+
+
+
+.upload-header-icon{
+
+    width:22px;
+
+    height:22px;
+
+    filter:invert(100%);
+
+}
+
+
 .search-bar {
     position: absolute;
     left: 50%;
@@ -139,21 +476,4 @@
 .searchbtnbg{
     width: 45px;
     flex-shrink: 0;
-}
-
-.uploadbtn {
-    background-color: rgb(157, 0, 255); /* purple */
-    color: white;
-    border: none;
-    padding: 3px 6px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-left: -4px;
-}
-
-#uploadIcon{
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    margin-left: 5px;
 }

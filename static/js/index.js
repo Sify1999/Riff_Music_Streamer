@@ -8,6 +8,95 @@ const indicator = document.querySelector(".indicator");
 const songList = document.querySelector(".song-list");
 const playlistList = document.querySelector(".playlist-list");
 const detailBar = document.getElementById("DetailBar")
+const openUpload = document.getElementById("openUpload");
+const uploadModal = document.getElementById("uploadModal");
+const closeUpload = document.getElementById("closeUpload");
+
+const songFile = document.getElementById("songFile");
+const uploadProgress = document.getElementById("uploadProgress");
+const uploadStatus = document.getElementById("uploadStatus");
+const uploadAnimation = document.getElementById("uploadAnimation");
+
+
+openUpload.onclick = ()=>{
+
+    uploadModal.classList.add("active");
+
+};
+
+
+closeUpload.onclick = ()=>{
+
+    uploadModal.classList.remove("active");
+
+};
+
+
+songFile.onchange = async ()=>{
+
+    const file = songFile.files[0];
+
+    if(!file) return;
+
+
+    uploadAnimation.classList.add("uploading");
+
+    uploadStatus.innerText="Uploading...";
+
+
+    const form = new FormData();
+
+    form.append("song",file);
+
+
+
+    const xhr = new XMLHttpRequest();
+
+
+    xhr.upload.onprogress = (e)=>{
+
+        if(e.lengthComputable){
+
+            let percent =
+            (e.loaded/e.total)*100;
+
+
+            uploadProgress.style.width =
+            percent+"%";
+
+        }
+
+    };
+
+
+    xhr.onload = ()=>{
+
+        uploadAnimation.classList.remove("uploading");
+
+        uploadStatus.innerText=
+        "✓ Added to library";
+
+        uploadStatus.classList.add("success");
+
+
+        setTimeout(()=>{
+
+            location.reload();
+
+        },1200);
+
+    };
+
+
+    xhr.open(
+        "POST",
+        "/upload"
+    );
+
+
+    xhr.send(form);
+
+};
 
 
 songsBtn.addEventListener('click' , () => {
