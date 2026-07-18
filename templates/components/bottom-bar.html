@@ -9,6 +9,9 @@
     </div>
     <div class="mid-controls">
         <div class="mid-top-controls">
+            <div id="shufflebtnbg" onclick="toggleShuffle()">
+                <img id="shuffleIcon" src="{{ url_for('static' , filename='assets/shuffle_icon.svg')}}" alt="Shuffle">
+            </div>
             <div class="nextbtnbg" onclick="playPrev()">
                 <img id="prevIcon" src=" {{ url_for('static' , filename='assets/next_icon.svg')}}" alt="Previous">
             </div>
@@ -21,7 +24,6 @@
             </div>
             <div id="loopbtnbg" onclick="toggleLoop()">
                 <img id="loopIcon" src=" {{ url_for('static' , filename='assets/loop_icon.svg')}}" alt="Loop">
-                <div id="activeLoopLogo"></div>
             </div>
         </div>
 

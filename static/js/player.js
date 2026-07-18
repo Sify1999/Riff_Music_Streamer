@@ -18,7 +18,6 @@ let lastVolume = volumeSlider.value;
 let currentSong = null;
 let loop = false;
 let currentSongIndex = -1;
-const loopActive = document.getElementById("activeLoopLogo")
 let positionInterval = null;
 let filteredSongs = [];
 const playlistPlayBtn = document.getElementById("playlist-play-btn");
@@ -30,7 +29,14 @@ audio.volume = 0.5;
 volumeSlider.value = 0.5;
 lastVolume = 0.5;
 filledVol.style.width = "50%";
-
+let shuffle = false;
+let shuffledQueue = [];
+const shuffleBtn = document.getElementById("shufflebtnbg");
+const playlistPopup = document.getElementById("playlistPopup");
+const playlistPopupList = document.querySelector(".playlist-popup-list");
+let popupLoaded = false;
+let selectedSong = null;
+playlistPopup.dataset.song = "";
 
 
 if(playlistPlayBtn) {
@@ -92,7 +98,9 @@ function playSong(song) {
     updateMediaMetadata(song);
     upadteBottomBar(song)
     currentSong = song;
-    const activeQueue = filteredSongs.length ? filteredSongs : songs;
+    const activeQueue = shuffle
+    ? shuffledQueue
+    : (filteredSongs.length ? filteredSongs : songs);
     currentSongIndex = activeQueue.indexOf(song)
     audio.src = `/stream/${song.filename}`;
     audio.load();
@@ -155,7 +163,10 @@ function startPositionSync() {
 }
 
 function playNext() {
-    const activeQueue = filteredSongs.length ? filteredSongs : songs;
+
+    const activeQueue = shuffle
+        ? shuffledQueue
+        : (filteredSongs.length ? filteredSongs : songs);
 
     if (activeQueue.length === 0) return;
 
@@ -165,6 +176,7 @@ function playNext() {
     }
 
     currentSongIndex = activeQueue.indexOf(currentSong);
+
     currentSongIndex++;
 
     if (currentSongIndex >= activeQueue.length) {
@@ -175,25 +187,27 @@ function playNext() {
 }
 
 function playPrev() {
-    if (audio.currentTime > 3){
+
+    if (audio.currentTime > 3) {
         audio.currentTime = 0;
         return;
     }
 
-    const activeQueue = filteredSongs.length ? filteredSongs : songs;
+    const activeQueue = shuffle
+        ? shuffledQueue
+        : (filteredSongs.length ? filteredSongs : songs);
 
-    if(activeQueue.length === 0) return;
+    if (activeQueue.length === 0) return;
+    if (!currentSong) return;
 
-    if(currentSong == null) return;
+    currentSongIndex = activeQueue.indexOf(currentSong);
 
-    currentSongIndex = activeQueue.indexOf(currentSong)
     currentSongIndex--;
 
-    if(currentSongIndex < 0) {
+    if (currentSongIndex < 0)
         currentSongIndex = activeQueue.length - 1;
-    }
-    playSong(activeQueue[currentSongIndex]);
 
+    playSong(activeQueue[currentSongIndex]);
 }
 
 function togglePlay() {
@@ -212,29 +226,48 @@ function togglePlay() {
 
 function toggleLoop() {
     loop = !loop;
-    if(loop){
-        loopActive.style.display = "block";
-    } else {
-        loopActive.style.display = "none";
-    }
     audio.loop = loop;
+
+    loopIconBg.classList.toggle("active", loop);
 }
 
-loopIconBg.addEventListener("mouseenter", () => {
-    if (!loop) {
-        loopActive.style.display = "block";
-    } else{
-        loopActive.style.display = "none";
-    }
-});
 
-loopIconBg.addEventListener("mouseleave", () => {
-    if(loop){
-        loopActive.style.display = "block"
-    } else {
-        loopActive.style.display = "none";
+function createShuffleQueue(queue) {
+    shuffledQueue = [...queue];
+
+    // Fisher-Yates shuffle
+    for (let i = shuffledQueue.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [shuffledQueue[i], shuffledQueue[j]] =
+        [shuffledQueue[j], shuffledQueue[i]];
     }
-});
+}
+
+function toggleShuffle() {
+
+    shuffle = !shuffle;
+
+    shuffleBtn.classList.toggle("active", shuffle);
+
+    if (!shuffle) return;
+
+    const activeQueue = filteredSongs.length
+        ? filteredSongs
+        : songs;
+
+    createShuffleQueue(activeQueue);
+
+    if (currentSong) {
+
+        shuffledQueue =
+            shuffledQueue.filter(
+                song => song.filename !== currentSong.filename
+            );
+
+        shuffledQueue.unshift(currentSong);
+    }
+}
 
 function seekAudio(value) {
     audio.currentTime = (value / 100) * audio.duration;
@@ -344,5 +377,170 @@ function scrollToCurrentSong() {
     setTimeout(() => row.classList.remove("highlight-song"), 1000);
 }
 
+async function loadPlaylistPopup() {
+
+    if (popupLoaded) return;
+
+    playlistPopupList.innerHTML = "";
+
+    const item = document.createElement("div");
+    item.className = "playlist-popup-item";
+
+    item.innerHTML = `
+        <div class="playlist-popup-left">
+
+            <img class="playlist-popup-cover" src="{{playlist.cover}}" alt="cover" onerror="this.src='/static/assets/def_cover.jpg'">
+
+            <div class="playlist-popup-text">
+
+                <div class="playlist-popup-name">
+                    {{playlist.name}}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="playlist-popup-status">
+            +
+        </div>
+    `;
+
+    item.addEventListener("click", async () => {
+
+        await addToPlaylist(
+            selectedSong.filename,
+            playlist.id
+        );
+
+        playlistPopup.classList.remove("active");
+        playlistPopup.dataset.song = "";
+    });
+
+    playlistPopupList.appendChild(item);
+
+    };
+
+    // Add "Create Playlist" button
+    const createItem = document.createElement("div");
+    createItem.className = "playlist-popup-item create-playlist-item";
+
+    createItem.innerHTML = `
+        <div class="playlist-popup-left">
+
+            <div class="playlist-popup-icon">
+                +
+            </div>
+
+            <div class="playlist-popup-text">
+
+                <div class="playlist-popup-name">
+                    Create Playlist
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+    createItem.addEventListener("click", () => {
+        // Open create playlist modal (to be implemented)
+        openCreatePlaylistModal();
+        playlistPopup.classList.remove("active");
+        playlistPopup.dataset.song = "";
+    });
+
+    playlistPopupList.appendChild(createItem);
+
+    popupLoaded = true;
+
+function openCreatePlaylistModal() {
+    // This will be implemented to show a modal for creating a new playlist
+    const playlistName = prompt("Enter playlist name:");
+    if (playlistName && playlistName.trim()) {
+        createPlaylist(playlistName.trim());
+    }
+}
+
+async function createPlaylist(name) {
+    const res = await fetch("/create_playlist", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name: name })
+    });
+    
+    if (res.ok) {
+        // Reload the page to show the new playlist
+        window.location.reload();
+    }
+}
+
+document.querySelectorAll(".add-btn").forEach((btn, index) => {
+
+    btn.addEventListener("click", async (e) => {
+
+        e.stopPropagation();
+
+        const row = btn.closest(".song-row");
+        selectedSong = songs.find(
+            song => song.filename === row.dataset.filename
+        );
+
+        const rect = btn.getBoundingClientRect();
+
+        // If this button already opened the popup, close it.
+        if (
+            playlistPopup.classList.contains("active") &&
+            playlistPopup.dataset.song === selectedSong.filename
+        ) {
+            playlistPopup.classList.remove("active");
+            playlistPopup.dataset.song = "";
+            return;
+        }
+
+        await loadPlaylistPopup();
+
+        // Get popup height (it's fixed at 320px max-height)
+        const popupHeight = 320;
+        
+        // Check if there's enough space below the button
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        
+        // Position the popup
+        playlistPopup.style.left = `${rect.right - 270}px`;
+        
+        // Remove the 'above' class first
+        playlistPopup.classList.remove("above");
+        
+        if (spaceBelow < popupHeight && spaceAbove > popupHeight) {
+            // Not enough space below, show above
+            playlistPopup.style.top = `${rect.top - popupHeight - 8}px`;
+            playlistPopup.classList.add("above");
+        } else {
+            // Show below
+            playlistPopup.style.top = `${rect.bottom + 8}px`;
+        }
+
+        playlistPopup.dataset.song = selectedSong.filename;
+        playlistPopup.classList.add("active");
+
+    });
+
+});
+
+document.addEventListener("click", (e) => {
+
+    if (
+        !playlistPopup.contains(e.target) &&
+        !e.target.closest(".add-btn")
+    ) {
+        playlistPopup.classList.remove("active");
+        playlistPopup.dataset.song = "";
+    }
+
+});
 
 initMediaSession();

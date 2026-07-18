@@ -220,9 +220,6 @@
     }
 }
 
-#loopbtnbg:hover #activeLoopLogo{
-    display: block;
-}
 .center-controls {
     flex-grow: 2;
     display: flex;
@@ -287,20 +284,64 @@
     transform: rotate(180deg);
     filter: invert(100%);
 }
-#activeLoopLogo{
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: rgb(183, 0, 255);
-    position: absolute;
-    margin-left: 19px;
-    margin-top: -8px;
-    display: none;
-}
 
 #currentTime,
 #totalTime {
     font-size: 13px;
     min-width: 35px;
     text-align: center;
+}
+
+#loopbtnbg{
+    border-radius: 50%;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+#loopIcon{
+    width: 32px;
+    height: 32px;
+    padding-left: 5px;
+    filter: invert(100%);
+    transition: filter .2s ease;
+}
+
+#loopbtnbg.active #loopIcon{
+    filter:
+        brightness(0)
+        saturate(100%)
+        invert(36%)
+        sepia(95%)
+        saturate(5000%)
+        hue-rotate(270deg)
+        brightness(105%)
+        contrast(105%);
+}
+
+#shufflebtnbg{
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+#shuffleIcon{
+    width: 22px;
+    height: 22px;
+    padding: 7px;
+    transition: .2s;
+    filter: invert(100%);
+    margin-top: 3px;
+}
+
+#shufflebtnbg.active #shuffleIcon{
+    filter:
+        brightness(0)
+        saturate(100%)
+        invert(36%)
+        sepia(95%)
+        saturate(5000%)
+        hue-rotate(270deg)
+        brightness(105%)
+        contrast(105%);
 }

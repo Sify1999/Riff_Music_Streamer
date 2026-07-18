@@ -19,13 +19,13 @@
 <body>
     <div class="top-view">
         <div class="playlist-header">
-            <img class="playlist-cover" src="{{playlist.cover}}" alt="playlist">
-            <div class="playlist-info">
-                <div class="playlist-name">
+            <img class="playlist-header-cover" src="{{playlist.cover}}" alt="playlist">
+            <div class="playlist-header-info">
+                <div class="playlist-header-name">
                     {{ playlist.name }}
                     
                 </div>
-                <div class="playlist-description">
+                <div class="playlist-header-description">
                     {{ playlist.description }}
                 </div>
                 <div id="playlist-play-btn" >
@@ -50,7 +50,12 @@
     <audio id="audio"></audio>
 
     <div id="songListEl" data-songs='{{ songs | tojson | safe }}'></div>     <!-- | tojson converts python objects to JS String -->
-
+    <div id="playlistMenu" class="playlist-menu"></div>
+    <div id="playlist-data"
+        data-playlist-id="{{ playlist_id }}"
+        hidden>
+</div>
 </body>
 <script src="{{ url_for('static', filename='js/player.js') }}"></script>
+<script src="{{ url_for('static', filename='js/playlist.js') }}"></script>
 </html>

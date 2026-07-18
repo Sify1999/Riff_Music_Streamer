@@ -4,8 +4,6 @@ const fileInput = document.getElementById('fileInput');
 const uploadIcon = document.getElementById('uploadIcon');
 const songsBtn = document.getElementById('songs-btn');
 const playlistsBtn = document.getElementById('playlists-btn');
-let openMenu = null;
-let x_btn = null;
 const indicator = document.querySelector(".indicator");
 const songList = document.querySelector(".song-list");
 const playlistList = document.querySelector(".playlist-list");
@@ -66,18 +64,18 @@ searchInput.addEventListener("input" , () => {
 
     filteredSongs = [];
 
-    songRows.forEach((row , index) => {
-        const songName = songs[index]
-        .replace(".mp3" , "")
-        .toLowerCase();
+    clearSearchBtn.style.display = query ? "block" : "none";
 
-        clearSearchBtn.style.display = query ? "block" : "none";
+    songRows.forEach((row, index) => {
+        const song = songs[index];
 
-        if( songName.includes(query) ){
-            row.style.display ="flex";
+        const searchableText =
+            `${song.title} ${song.artist}`.toLowerCase();
 
-            filteredSongs.push(songs[index])    
-        } else{
+        if (searchableText.includes(query)) {
+            row.style.display = "flex";
+            filteredSongs.push(song);
+        } else {
             row.style.display = "none";
         }
     })
@@ -96,9 +94,11 @@ clearSearchBtn.addEventListener("click" , () => {
         playingRow.scrollIntoView({ behavior: "smooth", block: "center" });
 
         const songEL = playingRow.querySelector(".song");
-        const songName = songEL.textContent.trim().toLocaleLowerCase() + ".mp3";
+        const filename = playingRow.dataset.filename;
 
-        currentSongIndex = songs.indexOf(songName);
+        currentSongIndex = songs.findIndex(
+            song => song.filename === filename
+        );
     }
 })
 
@@ -107,54 +107,6 @@ uploadIcon.addEventListener('click', () => {
     fileInput.click(); // Opens the file dialog
 });
 
-document.querySelectorAll(".add-btn").forEach((btn , index) => {
-    btn.addEventListener("click" , async (e)=> {
-        e.stopPropagation();
-    
-        const wrapper = btn.closest(".menu-wrapper")
-        const menu = wrapper.querySelector(".song-menu")
-        if(x_btn && x_btn!==btn){
-            x_btn.classList.remove("rotated")
-        }
-        btn.classList.toggle("rotated")
-        if (openMenu && openMenu !== menu){
-            openMenu.classList.remove("active")
-        }
-
-        menu.classList.toggle("active");
-        openMenu = menu;
-        x_btn = btn;
-        if (menu.dataset.loaded) return;
-
-        const res = await fetch("/playlists");
-        const playlists = await res.json();
-
-        playlists.forEach(p => {
-            const item = document.createElement("div");
-            item.className = "menu-item";
-            item.textContent = p.name;
-
-            item.onclick = async () => {
-            
-                await addToPlaylist(songs[index],p.id)
-                
-                menu.classList.remove("active");
-                openMenu = null;
-            } 
-
-            menu.appendChild(item)
-        });
-        menu.dataset.loaded = true;
-    });
-});
-
-document.addEventListener("click" , (e) => {
-    if( openMenu &&  !e.target.closest(".menu-wrapper")){
-        openMenu.classList.remove("active");
-        openMenu = null;
-        x_btn.classList.remove("rotated")
-    }
-})
 
 async function addToPlaylist(song , playlistId){
     await fetch("/add_to_playlist" , {

@@ -53,11 +53,11 @@
             <a href="{{ url_for('playlist_page', playlist_id=playlist.id) }}" class="playlist-card">
                 <div class="playlist-cover">
                     <img
-                        src="{{ url_for('static', filename='playlist-cover/' + playlist.name + '.jpg') }}"
+                        src="{{ playlist.cover}}"
                         alt="{{ playlist.name }}"
                     >
                 </div>
-                <div class="playlist-info">
+                <div class="playlist-card-info">
                     <h3>{{ playlist.name }}</h3>
                     <p>{{ playlist.song_count }} Songs</p>
                 </div>

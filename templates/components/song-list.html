@@ -25,7 +25,25 @@
         <div class="song-artist">{{ song.artist }}</div>
 
         <div class="song-duration">{{ song.duration }}</div>
-
+        <div class="song-actions">
+            <div class="menu-wrapper">
+                <button class="add-btn">+</button>
+                <div class="song-menu">
+                    <div class="menu-title">
+                        Add to playlist
+                    </div>
+                    <div class="playlist-list-menu"></div>
+                </div>
+            </div>
+        </div>
     </div>
     {% endfor %}
+</div>
+<div id="playlistPopup" class="playlist-popup">
+    <div class="playlist-popup-title">
+        Add to playlist
+    </div>
+
+<div class="playlist-popup-list">
+</div>
 </div>

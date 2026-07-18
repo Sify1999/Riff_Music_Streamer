@@ -190,7 +190,11 @@ class DataBase:
                 "id": row[0],
                 "name": row[1],
                 "description": row[2],
-                "song_count": row[3]
+                "song_count": row[3],
+                "cover" : url_for(
+                    "static",
+                    filename=f"playlist-cover/{row[1]}.jpg"
+                )
             }
             for row in rows
 ]
@@ -343,26 +347,14 @@ def upload_songs():
 
     return redirect(url_for("index"))
 
-@app.route("/playlists")
-def get_playlists():
-    conn = database.connect()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT id , name FROM playlists")
-    playlists = cursor.fetchall()
-
-    conn.close()
-
-    return jsonify([
-        {"id" : p[0] , "name" : p[1]} for p in playlists
-    ])
-
 @app.route("/add_to_playlist" , methods=["POST"])
 def add_to_playlist():
     data = request.json
     song_name = data.get("song")
     playlist_id = data.get("playlist_id")
-
+    print(data)
+    print(song_name)
+    print(type(song_name))
     conn = database.connect()
     cursor = conn.cursor()
 
@@ -384,6 +376,19 @@ def add_to_playlist():
     return jsonify({"success" : True})
 
 
+@app.route("/create_playlist" , methods=["POST"])
+def create_playlist():
+    data = request.json
+    name = data.get("name")
+    
+    if not name:
+        return jsonify({"error": "name is required"}), 400
+    
+    database.add_playlist(name, "")
+    
+    return jsonify({"success": True})
+
+
 @app.route("/playlist/<int:playlist_id>")
 def playlist_page(playlist_id):
 
@@ -393,7 +398,8 @@ def playlist_page(playlist_id):
     return render_template(
         "playlist.html",
         songs = songs ,
-        playlist = playlist
+        playlist = playlist ,
+        playlist_id = playlist_id
     )
 
 
