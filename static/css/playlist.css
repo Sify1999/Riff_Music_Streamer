@@ -13,13 +13,23 @@ body {
 }
 
 .top-view{
-    background: linear-gradient(190deg , rgb(24, 9, 52) , rgb(19, 20, 30) );
+         background:
+        linear-gradient(
+            135deg,
+            rgb(30, 22, 48) 0%,
+            rgb(22, 21, 36) 40%,
+            rgb(15, 16, 26) 75%,
+            rgb(12, 13, 22) 100%
+        );
+
+    border-radius:14px;
     width: 100%;
     height: 205px;
     display: flex;
     align-items: center;
-    border-radius: 10px;
 }
+
+
 
 .playlist-header{
     background-color: transparent;
@@ -55,6 +65,16 @@ body {
     height: 66px;
 }
 
+.playlist-header-song-count{
+    margin-top: 12px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    color: rgba(255, 255, 255, 0.9);
+
+    letter-spacing: .2px;
+}
 #playlist-play-btn{
     margin-top: 10px;
     width: 120px;

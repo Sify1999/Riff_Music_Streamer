@@ -1,5 +1,4 @@
 .header-bar {
-    position: relative;
     width: 100%;
     background: transparent;
     height: 65px;
@@ -7,7 +6,76 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+    padding:0 20px;
+    position:relative;
 }
+
+.header-left{
+
+    width:220px;
+
+    display:flex;
+    align-items:center;
+
+}
+
+.header-logo{
+
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
+    text-decoration:none;
+
+    color:white;
+
+}
+
+.header-logo img{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:10px;
+
+    transition:.25s;
+
+}
+
+.header-logo span{
+
+    font-size:24px;
+
+    font-family:"Cal Sans", sans-serif;
+
+    letter-spacing:.5px;
+
+}
+
+.header-logo:hover img{
+
+    transform:rotate(-8deg) scale(1.08);
+
+}
+
+.header-logo:hover{
+
+    filter:brightness(1.1);
+
+}
+
+.header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
 .upload-form {
     display: flex;
     gap: 8px; /* space between input and button */
@@ -53,7 +121,6 @@
 }
 
 .upload-progress-wrapper{
-
     margin-top:25px;
 
 }
@@ -302,66 +369,52 @@
     height:40px;
 
     display:flex;
-
     align-items:center;
-
     gap:8px;
 
-    margin-left:20px;
+    padding:0 18px;
 
-    padding:0 16px;
+    background:rgba(148,92,245,.22);
 
-
-    background:
-    linear-gradient(
-        135deg,
-        rgb(148,92,245),
-        rgb(100,40,200)
-    );
-
-
-    color:white;
-
-    border:none;
+    border:1px solid rgba(148,92,245,.45);
 
     border-radius:12px;
 
+    color:white;
 
-    font-family:"Cal Sans", sans-serif;
-
+    font-family:"Cal Sans",sans-serif;
     font-size:15px;
-
 
     cursor:pointer;
 
-
     transition:
-    transform .2s ease,
-    box-shadow .2s ease,
-    filter .2s ease;
+        background .25s,
+        border-color .25s,
+        transform .2s,
+        box-shadow .25s;
 
 }
-
 
 .upload-btn-modern:hover{
 
+    background:
+    rgba(148,92,245,.32);
+
+    border-color:
+    rgb(148,92,245);
+
     transform:translateY(-2px);
 
-    filter:brightness(1.15);
-
-
     box-shadow:
-    0 8px 25px rgba(148,92,245,.35);
+        0 8px 20px rgba(148,92,245,.22);
 
 }
 
-
-
 .upload-header-icon{
 
-    width:22px;
+    width:26px;
 
-    height:22px;
+    height:26px;
 
     filter:invert(100%);
 
@@ -476,4 +529,75 @@
 .searchbtnbg{
     width: 45px;
     flex-shrink: 0;
+}
+
+.header-create-playlist-form{
+    display:flex;
+    align-items:center;
+}
+
+
+/* Create playlist button */
+
+.header-create-playlist-btn{
+
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:0 18px;
+
+    margin-right:20px;
+
+    background:rgba(148,92,245,.12);
+
+    color:white;
+
+    border:1px solid rgba(148,92,245,.5);
+
+    border-radius:12px;
+
+
+    font-family:"Cal Sans", sans-serif;
+
+    font-size:15px;
+
+
+    cursor:pointer;
+
+
+    transition:
+    transform .2s ease,
+    background .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease;
+
+}
+
+
+.header-create-playlist-btn:hover{
+
+    background:
+    rgba(148,92,245,.35);
+
+    border-color:
+    rgb(148,92,245);
+
+
+    transform:
+    translateY(-2px);
+
+
+    box-shadow:
+    0 8px 25px rgba(148,92,245,.25);
+
+}
+
+
+.header-create-playlist-btn:active{
+
+    transform:translateY(0);
+
 }

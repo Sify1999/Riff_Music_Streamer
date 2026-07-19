@@ -18,7 +18,9 @@
 
         <img class="song-cover"
              src="{{ song.cover }}"
-             alt="cover">
+             alt="cover"
+             onerror="this.src='/static/assets/song-default.png'">
+             
 
         <div class="song-title">{{ song.title }}</div>
 

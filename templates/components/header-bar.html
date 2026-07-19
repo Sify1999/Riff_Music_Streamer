@@ -1,0 +1,51 @@
+<link rel="stylesheet" href=" {{ url_for('static' , filename='css/header-bar.css')}}">
+<div class="header-bar">
+        <div class="header-left">
+
+            <a href="{{ url_for('index') }}" class="header-logo">
+
+                <img
+                    src="{{ url_for('static', filename='assets/site_logo.png') }}"
+                    alt="Riff">
+
+                <span>Riff</span>
+
+            </a>
+
+        </div>
+
+        <div class="header-right">
+
+                <div class="upload-form">
+                    
+                    <button class="upload-btn-modern" id="openUpload">
+                        
+                        <img 
+                    src="{{ url_for('static', filename='assets/upload_icon.svg')}}"
+                    class="upload-header-icon">
+                    
+                    <span>
+                        Add Music
+                    </span>
+                </button>
+            </div>
+
+            <div class="header-create-playlist-form">
+                <button class="header-create-playlist-btn" id="headerCreateBtn">
+                    <span>
+                        + Playlist
+                    </span>
+                </button>
+            </div>
+
+        </div>
+        <div class="search-bar">
+            <!-- add on click for searchbtnbg -->
+            <div class="searchbtnbg">
+                <img id="searchIcon" src=" {{ url_for('static' , filename='assets/search_icon.svg')}} " alt="Search">
+            </div>
+            <input id="searchInput" class="search-text" type="text" placeholder="Search Song...">
+            <div id="clearSearch">✕</div>
+        </div>
+        
+    </div>

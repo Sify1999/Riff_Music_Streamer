@@ -416,7 +416,8 @@ def playlist_page(playlist_id):
         "playlist.html",
         songs = songs ,
         playlist = playlist ,
-        playlist_id = playlist_id
+        playlist_id = playlist_id , 
+        song_count=len(songs)
     )
 
 

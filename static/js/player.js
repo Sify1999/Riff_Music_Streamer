@@ -444,6 +444,12 @@ const cancelCreateBtn = document.getElementById("cancelCreatePlaylist");
 const closeCreateBtn = document.getElementById("closeCreatePlaylist");
 const createPlaylistError = document.getElementById("createPlaylistError");
 let selectedCoverFile = null;
+const headerCreateBtn = document.getElementById("headerCreateBtn");
+
+
+headerCreateBtn.addEventListener("click", () => {
+    openCreatePlaylistModal();
+});
 
 function openCreatePlaylistModal() {
     createPlaylistOverlay.classList.add("active");

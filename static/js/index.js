@@ -16,7 +16,7 @@ const songFile = document.getElementById("songFile");
 const uploadProgress = document.getElementById("uploadProgress");
 const uploadStatus = document.getElementById("uploadStatus");
 const uploadAnimation = document.getElementById("uploadAnimation");
-
+const uploadProgressText = document.getElementById("uploadProgressText")
 
 openUpload.onclick = ()=>{
 
@@ -42,8 +42,7 @@ songFile.onchange = async ()=>{
     uploadAnimation.classList.add("uploading");
 
     uploadStatus.innerText="Uploading...";
-
-
+    uploadProgressText.innerText="";
     const form = new FormData();
 
     form.append("song",file);

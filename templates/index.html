@@ -15,34 +15,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
     <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-    <link rel="stylesheet" href=" {{ url_for('static' , filename='css/header-bar.css')}}">
 </head>
 <body>
-    <div class="header-bar">
-        <div class="upload-form">
-
-            <button class="upload-btn-modern" id="openUpload">
-
-                <img 
-                src="{{ url_for('static', filename='assets/upload_icon.svg')}}"
-                class="upload-header-icon">
-
-                <span>
-                    Add Music
-                </span>
-
-            </button>
-
-        </div>
-        <div class="search-bar">
-            <!-- add on click for searchbtnbg -->
-            <div class="searchbtnbg">
-                <img id="searchIcon" src=" {{ url_for('static' , filename='assets/search_icon.svg')}} " alt="Search">
-            </div>
-            <input id="searchInput" class="search-text" type="text" placeholder="Search Song...">
-            <div id="clearSearch">✕</div>
-        </div>
-    </div>
+    {% include "components/header-bar.html" %}
     <div class="main-view">
         <div class="view-switcher-wrapper">
             <div class="view-switcher">
@@ -117,9 +92,9 @@
             </label>
 
 
-            <div class="upload-progress-wrapper">
+            <div class="upload-progress-wrapper" id="uploadProgressWrapper">
 
-                <div class="upload-progress-text">
+                <div class="upload-progress-text" id="uploadProgressText">
                     Uploading...
                 </div>
                 <div class="upload-progress">
@@ -129,7 +104,6 @@
                     </div>
                 </div>
             </div>
-
 
                 <div id="uploadStatus">
                 </div>

@@ -17,7 +17,8 @@
     <link rel="stylesheet" href="{{ url_for('static' , filename='css/playlist.css') }}">
 </head>
 <body>
-    <div class="top-view">
+    {% include "components/header-bar.html" %}
+    <div class="top-view">  
         <div class="playlist-header">
             <img class="playlist-header-cover" src="{{playlist.cover}}" alt="playlist">
             <div class="playlist-header-info">
@@ -27,6 +28,9 @@
                 </div>
                 <div class="playlist-header-description">
                     {{ playlist.description }}
+                </div>
+                <div class="playlist-header-song-count">
+                    {{ song_count }} Songs
                 </div>
                 <div id="playlist-play-btn" >
                     <img class="playlist-play-icon" src="{{ url_for('static' , filename='assets/play_icon.svg')}}" alt="play">
