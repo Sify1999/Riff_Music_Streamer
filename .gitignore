@@ -27,9 +27,11 @@ env/
     
 # Music files
 static/music/
+!static/music/.gitkeep
 
 # Song covers
 static/cover/
+!static/cover/.gitkeep
 
 # Playlist covers
 static/playlist-cover/
