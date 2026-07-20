@@ -5,6 +5,9 @@ from mutagen.id3 import ID3 , APIC
 from math import ceil
 import re
 import sqlite3
+from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash
+
 
 class DataBase:
     def __init__(self , db_name = "database.db"):
@@ -47,6 +50,14 @@ class DataBase:
                        )
         """)
         print("created playlist_songs table")
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            avatar TEXT DEFAULT 'default.png'
+        )""")
         
         conn.commit()
         conn.close()
@@ -74,6 +85,41 @@ class DataBase:
             return False
         finally:
             conn.close()
+
+    def add_user(self , username , email , password):
+        conn = self.connect()
+        cursor = conn.cursor()
+        password_hash = generate_password_hash(password)
+
+        try:
+            cursor.execute("""
+                INSERT INTO users (username , email , password_hash)
+                VALUES (?,?,?)""",(username , email , password_hash))
+
+            conn.commit()
+            return True
+        
+        except sqlite3.IntegrityError:
+            return False
+        
+        finally:
+            conn.close()
+
+    def get_user_by_email(self, email):
+        conn = self.connect()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT *
+            FROM users
+            WHERE email = ?
+        """, (email,))
+
+        user = cursor.fetchone()
+        conn.close()
+
+        return user
 
 
 
@@ -134,6 +180,7 @@ class DataBase:
         cursor.execute("DELETE FROM playlist_songs")
         cursor.execute("DELETE FROM songs")
         cursor.execute("DELETE FROM playlists")
+        cursor.execute("DELETE FROM users")
 
         # reset auto-increment counters
         cursor.execute("DELETE FROM sqlite_sequence WHERE name='songs'")
@@ -419,6 +466,28 @@ def playlist_page(playlist_id):
         playlist_id = playlist_id , 
         song_count=len(songs)
     )
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+
+    if request.method == "POST":
+
+        username = request.form["username"]
+        email = request.form["email"]
+        password = request.form["password"]
+
+        success = database.add_user(
+            username,
+            email,
+            password
+        )
+
+        if success:
+            return redirect(url_for("index"))
+
+        return "User already exists."
+
+    return render_template("register.html")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Riff</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+</head>
+<body>
+
+    <div class="register-card">
+
+        <img
+            class="logo"
+            src="{{ url_for('static', filename='assets/site_logo.png') }}"
+            alt="Riff Logo"
+        >
+
+        <h1>Create Account</h1>
+
+        <p class="subtitle">
+            Join Riff and start building your music library.
+        </p>
+
+        <form action="/register" method="POST">
+
+            <div class="input-group">
+                <label for="username">Username</label>
+
+                <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    placeholder="Enter your username"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="email">Email</label>
+
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+
+                <label for="password">Password</label>
+
+                <div class="password-box">
+
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                    <button
+                        class="show-password"
+                        type="button"
+                    >
+                        <img class="eye" src="{{url_for('static' , filename='assets/eye-on.svg')}}" alt="eye-on">
+                    </button>
+
+                </div>
+
+            </div>
+
+            <button
+                class="register-btn"
+                type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <button
+            class="google-btn"
+            type="button">
+
+            <img
+                src="{{ url_for('static', filename='assets/google.svg') }}"
+                alt=""
+            >
+
+            Continue with Google
+
+        </button>
+
+        <p class="bottom-text">
+
+            Already have an account?
+
+            <a href="/login">
+                Sign In
+            </a>
+
+        </p>
+
+    </div>
+
+</body>
+</html>

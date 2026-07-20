@@ -464,8 +464,9 @@ function closeCreatePlaylistModal() {
     playlistDescInput.value = "";
     descCharCount.textContent = "0";
     coverPreview.src = "";
-    coverPreview.hidden = true;
-    coverPlaceholder.hidden = false;
+    coverPreview.style.display = "none";
+    coverPlaceholder.style.display = "flex";
+    coverInput.value = "";      // <-- add this    
     selectedCoverFile = null;
     confirmCreateBtn.disabled = true;
     createPlaylistError.textContent = "";
@@ -480,8 +481,8 @@ coverInput.addEventListener("change", () => {
     const reader = new FileReader();
     reader.onload = (e) => {
         coverPreview.src = e.target.result;
-        coverPreview.hidden = false;
-        coverPlaceholder.hidden = true;
+    coverPreview.style.display = "block";
+    coverPlaceholder.style.display = "none";
     };
     reader.readAsDataURL(file);
 });

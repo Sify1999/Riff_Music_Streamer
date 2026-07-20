@@ -1,7 +1,6 @@
 const searchInput = document.getElementById("searchInput");
 const clearSearchBtn = document.getElementById("clearSearch")
 const fileInput = document.getElementById('fileInput');
-const uploadIcon = document.getElementById('uploadIcon');
 const songsBtn = document.getElementById('songs-btn');
 const playlistsBtn = document.getElementById('playlists-btn');
 const indicator = document.querySelector(".indicator");
@@ -189,11 +188,6 @@ clearSearchBtn.addEventListener("click" , () => {
         );
     }
 })
-
-
-uploadIcon.addEventListener('click', () => {
-    fileInput.click(); // Opens the file dialog
-});
 
 
 async function addToPlaylist(song , playlistId){
