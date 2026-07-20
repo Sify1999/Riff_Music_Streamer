@@ -33,7 +33,7 @@ let shuffle = false;
 let shuffledQueue = [];
 const shuffleBtn = document.getElementById("shufflebtnbg");
 const playlistPopup = document.getElementById("playlistPopup");
-const playlistPopupList = document.querySelector(".playlist-popup-list");``
+const playlistPopupList = document.querySelector(".playlist-popup-list");
 let selectedSong = null;
 playlistPopup.dataset.song = "";
 

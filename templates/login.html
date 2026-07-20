@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Riff</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+</head>
+<body>
+
+    <div class="register-card">
+
+        <img
+            class="logo"
+            src="{{ url_for('static', filename='assets/site_logo.png') }}"
+            alt="Riff Logo"
+        >
+
+        <h1>Welcome Back</h1>
+
+        <p class="subtitle">
+            Log in to keep listening.
+        </p>
+
+        {% if error %}
+        <p class="form-error">{{ error }}</p>
+        {% endif %}
+
+        <form action="/login" method="POST">
+
+            <div class="input-group">
+                <label for="identifier">Email or Username</label>
+
+                <input
+                    id="identifier"
+                    name="identifier"
+                    type="text"
+                    placeholder="Enter your email or username"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+
+                <label for="password">Password</label>
+
+                <div class="password-box">
+
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                    <button
+                        class="show-password"
+                        type="button"
+                        id="togglePassword"
+                        aria-label="Show password"
+                        aria-pressed="false"
+                    >
+                        <img class="eye" id="eyeIcon" src="{{ url_for('static', filename='assets/eye-off.svg') }}" alt="">
+                    </button>
+
+                </div>
+
+            </div>
+
+            <button
+                class="register-btn"
+                type="submit">
+                Log In
+            </button>
+
+        </form>
+
+        <p class="bottom-text">
+
+            Don't have an account?
+
+            <a href="/register">
+                Sign Up
+            </a>
+
+        </p>
+
+    </div>
+
+</body>
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</html>

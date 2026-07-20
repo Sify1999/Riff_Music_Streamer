@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='assets/site_logo.png') }}" type="image/x-icon">
     <title>Register | Riff</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
@@ -23,7 +24,7 @@
             Join Riff and start building your music library.
         </p>
 
-        <form action="/register" method="POST">
+        <form action="/register" method="POST" autocomplete="off">
 
             <div class="input-group">
                 <label for="username">Username</label>
@@ -33,6 +34,7 @@
                     name="username"
                     type="text"
                     placeholder="Enter your username"
+                    autocomplete="off"
                     required
                 >
             </div>
@@ -45,6 +47,7 @@
                     name="email"
                     type="email"
                     placeholder="Enter your email"
+                    autocomplete="off"
                     required
                 >
             </div>
@@ -60,17 +63,51 @@
                         name="password"
                         type="password"
                         placeholder="Enter your password"
+                        autocomplete="new-password"
                         required
                     >
 
                     <button
                         class="show-password"
                         type="button"
+                        id="togglePassword"
+                        aria-label="Show password"
+                        aria-pressed="false"
                     >
-                        <img class="eye" src="{{url_for('static' , filename='assets/eye-on.svg')}}" alt="eye-on">
+                        <img class="eye" id="eyeIcon" src="{{ url_for('static', filename='assets/eye-off.svg') }}" alt="">
                     </button>
 
                 </div>
+
+            </div>
+            <div class="input-group">
+
+                <label for="confirmPassword">Confirm Password</label>
+
+                <div class="password-box">
+
+                    <input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        placeholder="Re-enter your password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <button
+                        class="show-password"
+                        type="button"
+                        id="toggleConfirmPassword"
+                        aria-label="Show password"
+                        aria-pressed="false"
+                    >
+                        <img class="eye" id="eyeIconConfirm" src="{{ url_for('static', filename='assets/eye-off.svg') }}" alt="">
+                    </button>
+
+                </div>
+
+                <div class="field-error" id="passwordError"></div>
 
             </div>
 
@@ -110,6 +147,6 @@
         </p>
 
     </div>
-
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
 </body>
 </html>

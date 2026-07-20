@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_file , abort , Response , request , jsonify , redirect , url_for
+from flask import Flask, render_template, send_file , abort , Response , request , jsonify , redirect , url_for , session
 import os
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3 , APIC 
@@ -121,7 +121,21 @@ class DataBase:
 
         return user
 
+    def get_user_by_username(self, username):
+        conn = self.connect()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
 
+        cursor.execute("""
+            SELECT *
+            FROM users
+            WHERE username = ?
+        """, (username,))
+
+        user = cursor.fetchone()
+        conn.close()
+
+        return user
 
     def delete_playlist(self , playlist_id):
         conn = self.connect()
@@ -242,7 +256,7 @@ class DataBase:
                 "song_count": row[3],
                 "cover" : url_for(
                     "static",
-                    filename=f"playlist-cover/{row[1]}.jpg"
+                    filename=f"playlist-cover/{secure_filename_windows(row[1])}.jpg"
                 )
             }
             for row in rows
@@ -303,13 +317,14 @@ class DataBase:
             "description": playlist[1], 
             "cover": url_for(
                     "static",
-                    filename=f"playlist-cover/{playlist[0]}.jpg"
+                    filename=f"playlist-cover/{secure_filename_windows(playlist[0])}.jpg"
                 )
         }
 
 
 app = Flask(__name__)
 database = DataBase()
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-only-change-me")
 
 
 MUSIC_FOLDER = "static/music"
@@ -339,6 +354,13 @@ def stream_music(filename):
         abort(404) 
 
     filepath = os.path.join(MUSIC_FOLDER , filename)
+    music_root = os.path.realpath(MUSIC_FOLDER)
+
+    if not filepath.startswith(music_root + os.sep):
+        abort(404)
+
+    if not os.path.isfile(filepath):
+        abort(404)
 
     return send_file(filepath , mimetype="audio/mpeg" , as_attachment=False)
 
@@ -447,7 +469,8 @@ def create_playlist():
         return jsonify({"error": "A playlist with that name already exists"}), 409
 
     if cover and cover.filename:
-        cover_path = os.path.join(PLAYLIST_COVER_FOLDER, f"{name}.jpg")
+        safe_name = secure_filename_windows(name)
+        cover_path = os.path.join(PLAYLIST_COVER_FOLDER, f"{safe_name}.jpg")
         cover.save(cover_path)
 
     return jsonify({"success": True})
@@ -488,6 +511,32 @@ def register():
         return "User already exists."
 
     return render_template("register.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        identifier = request.form.get("identifier", "").strip()
+        password = request.form.get("password", "")
+
+        if "@" in identifier:
+            user = database.get_user_by_email(identifier)
+        else:
+            user = database.get_user_by_username(identifier)
+
+        if user and check_password_hash(user["password_hash"], password):
+            session["user_id"] = user["id"]
+            session["username"] = user["username"]
+            return redirect(url_for("index"))
+
+        return render_template("login.html", error="Incorrect email/username or password.")
+
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":
