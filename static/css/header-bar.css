@@ -614,11 +614,21 @@
     font-size:15px;
 
     transition:.2s;
+
+    background-color: rgb(14, 16, 27);
+
+    padding:10px 26px;
+
+    position: relative;
+
+    z-index: 1;
+
+    border-radius: 999px;
 }
 
 .login-btn:hover{
-
     color:white;
+    background-color: rgb(18, 20, 34);
 }
 
 .signup-btn{
@@ -634,6 +644,10 @@
     border-radius:999px;
 
     transition:.2s;
+
+    z-index: 2;
+
+    margin-left: -28px;
 }
 
 .signup-btn:hover{
@@ -641,4 +655,30 @@
     background:rgb(157, 0, 255);
 
     transform:translateY(-2px);
+}
+
+.user-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-pfp{
+    width:44px;
+    height:44px;
+
+    border-radius:50%;
+    object-fit:cover;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    border:2px solid rgba(255,255,255,.08);
+}
+
+
+.user-avatar:hover{
+    transform:scale(1.08);
+    border-color:rgb(157,0,255);
 }

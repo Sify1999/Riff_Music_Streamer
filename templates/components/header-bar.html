@@ -48,7 +48,13 @@
                     </span>
                 </button>
             </div>
+            
+            {% if session.get("user_id") %}
+            <div class="user-header">
+                <img src="{{ url_for('static', filename='assets/site_logo.png')}}" alt="user image" class="user-pfp">
+            </div>
 
+            {% else %}
             <div class="header-auth">
                 
                 <a href="{{ url_for('login') }}" class="login-btn">
@@ -61,6 +67,7 @@
 
 
             </div>
+            {% endif %}
 
         </div>
         
