@@ -14,6 +14,17 @@
 
         </div>
 
+
+        <div class="search-bar">
+            <!-- add on click for searchbtnbg -->
+            <div class="searchbtnbg">
+                <img id="searchIcon" src=" {{ url_for('static' , filename='assets/search_icon.svg')}} " alt="Search">
+            </div>
+            <input id="searchInput" class="search-text" type="text" placeholder="Search Song...">
+            <div id="clearSearch">✕</div>
+        </div>
+
+
         <div class="header-right">
 
                 <div class="upload-form">
@@ -24,11 +35,11 @@
                     src="{{ url_for('static', filename='assets/upload_icon.svg')}}"
                     class="upload-header-icon">
                     
-                    <span>
-                        Add Music
-                    </span>
-                </button>
-            </div>
+                        <span>
+                            Add Music
+                        </span>
+                    </button>
+                </div>
 
             <div class="header-create-playlist-form">
                 <button class="header-create-playlist-btn" id="headerCreateBtn">
@@ -38,14 +49,20 @@
                 </button>
             </div>
 
-        </div>
-        <div class="search-bar">
-            <!-- add on click for searchbtnbg -->
-            <div class="searchbtnbg">
-                <img id="searchIcon" src=" {{ url_for('static' , filename='assets/search_icon.svg')}} " alt="Search">
+            <div class="header-auth">
+                
+                <a href="{{ url_for('login') }}" class="login-btn">
+                    Log in
+                </a>
+                
+                <a href="{{ url_for('register') }}" class="signup-btn">
+                    Sign up
+                </a>
+
+
             </div>
-            <input id="searchInput" class="search-text" type="text" placeholder="Search Song...">
-            <div id="clearSearch">✕</div>
+
         </div>
+        
         
     </div>

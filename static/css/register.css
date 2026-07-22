@@ -86,16 +86,6 @@ body{
     background:#202020;
 }
 
-.input-group input:focus{
-
-    outline:none;
-
-    border-color:#56A4FF;
-
-    box-shadow:0 0 0 4px rgba(86,164,255,.15);
-}
-
-
 .input-group input:hover{
     background:#222;
 }
@@ -104,7 +94,42 @@ body{
     outline:none;
 
     border-color:rgb(183, 0, 255);
-    box-shadow:0 0 0 4px rgba(29,185,84,.15);
+    box-shadow:
+        0 0 0px 1000px #1a1a1a inset,
+        0 0 0 4px rgba(174, 4, 241, 0.15);
+}
+
+/* Chrome / Edge Autofill */
+
+.input-group input:-webkit-autofill,
+.input-group input:-webkit-autofill:hover,
+.input-group input:-webkit-autofill:focus,
+.input-group input:-webkit-autofill:active{
+
+    -webkit-text-fill-color: white;
+
+    -webkit-box-shadow: 0 0 0px 1000px #1a1a1a inset;
+
+    box-shadow: 0 0 0px 1000px #1a1a1a inset;
+
+    border:1px solid rgb(183, 0, 255);
+
+    -webkit-transition: background-color 9999s ease-in-out 0s;
+
+    transition: background-color 9999s ease-in-out 0s;
+
+    caret-color: white;
+}
+
+/* Keep your focus glow */
+
+.input-group input:-webkit-autofill:focus{
+
+    box-shadow:
+        0 0 0px 1000px #1a1a1a inset,
+        0 0 0 4px rgba(174, 4, 241, 0.15);
+
+    border-color: rgb(183,0,255);
 }
 
 label{

@@ -1,19 +1,21 @@
+
+
 .header-bar {
     width: 100%;
     background: transparent;
     height: 65px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    gap: 20px;
     padding:0 20px;
     position:relative;
+    box-sizing: border-box;
 }
 
 .header-left{
 
-    width:220px;
-
+    width:160px;
+    flex-shrink: 0;
     display:flex;
     align-items:center;
 
@@ -67,13 +69,14 @@
 }
 
 .header-right{
+    margin-left:auto;
 
     display:flex;
-
     align-items:center;
 
     gap:12px;
 
+    flex-shrink:0;
 }
 
 .upload-form {
@@ -421,19 +424,21 @@
 }
 
 
-.search-bar {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: white;
-    align-items: center;
-    display: flex;
-    border-radius: 25px;
-    min-width: 300px;
-    width: 32%;
-    height: 75%;
-    gap: 6px;
-    overflow: hidden;
+.search-bar{
+    flex:1;
+
+    max-width:550px;
+    min-width:300px;
+
+    height:70%;
+
+    display:flex;
+    align-items:center;
+
+    background:white;
+    border-radius:25px;
+
+    overflow:hidden;
 }
 
 #searchIcon{
@@ -499,12 +504,6 @@
     cursor: pointer;
 }
 
-.search-bar {
-    width: 30%;
-    min-width: 0px;
-    height: 70%;
-    gap: 3px;
-}
 .header-bar {
     height: 65px;
 }
@@ -536,8 +535,6 @@
     align-items:center;
 }
 
-
-/* Create playlist button */
 
 .header-create-playlist-btn{
 
@@ -600,4 +597,48 @@
 
     transform:translateY(0);
 
+}
+
+.header-auth{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.login-btn{
+
+    text-decoration:none;
+
+    color:rgba(255,255,255,.75);
+
+    font-size:15px;
+
+    transition:.2s;
+}
+
+.login-btn:hover{
+
+    color:white;
+}
+
+.signup-btn{
+
+    text-decoration:none;
+
+    background:rgb(157, 0, 255);
+
+    color:white;
+
+    padding:10px 22px;
+
+    border-radius:999px;
+
+    transition:.2s;
+}
+
+.signup-btn:hover{
+
+    background:rgb(157, 0, 255);
+
+    transform:translateY(-2px);
 }
