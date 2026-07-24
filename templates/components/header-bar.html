@@ -1,75 +1,134 @@
 <link rel="stylesheet" href=" {{ url_for('static' , filename='css/header-bar.css')}}">
 <div class="header-bar">
-        <div class="header-left">
+    <div class="header-left">
 
-            <a href="{{ url_for('index') }}" class="header-logo">
+        <a href="{{ url_for('index') }}" class="header-logo">
 
-                <img
-                    src="{{ url_for('static', filename='assets/site_logo.png') }}"
-                    alt="Riff">
+            <img
+                src="{{ url_for('static', filename='assets/site_logo.png') }}"
+                alt="Riff">
 
-                <span>Riff</span>
+            <span>Riff</span>
 
-            </a>
+        </a>
 
+    </div>
+
+
+    <div class="search-bar">
+        <!-- add on click for searchbtnbg -->
+        <div class="searchbtnbg">
+            <img id="searchIcon" src=" {{ url_for('static' , filename='assets/search_icon.svg')}} " alt="Search">
         </div>
+        <input id="searchInput" class="search-text" type="text" placeholder="Search Song...">
+        <div id="clearSearch">✕</div>
+    </div>
 
 
-        <div class="search-bar">
-            <!-- add on click for searchbtnbg -->
-            <div class="searchbtnbg">
-                <img id="searchIcon" src=" {{ url_for('static' , filename='assets/search_icon.svg')}} " alt="Search">
-            </div>
-            <input id="searchInput" class="search-text" type="text" placeholder="Search Song...">
-            <div id="clearSearch">✕</div>
-        </div>
+    <div class="header-right">
 
-
-        <div class="header-right">
-
-                <div class="upload-form">
+            <div class="upload-form">
+                
+                <button class="upload-btn-modern" id="openUpload">
                     
-                    <button class="upload-btn-modern" id="openUpload">
-                        
-                        <img 
-                    src="{{ url_for('static', filename='assets/upload_icon.svg')}}"
-                    class="upload-header-icon">
-                    
-                        <span>
-                            Add Music
-                        </span>
-                    </button>
-                </div>
-
-            <div class="header-create-playlist-form">
-                <button class="header-create-playlist-btn" id="headerCreateBtn">
+                    <img 
+                src="{{ url_for('static', filename='assets/upload_icon.svg')}}"
+                class="upload-header-icon">
+                
                     <span>
-                        + Playlist
+                        Add Music
                     </span>
                 </button>
             </div>
-            
-            {% if session.get("user_id") %}
-            <div class="user-header">
-                <img src="{{ url_for('static', filename='assets/site_logo.png')}}" alt="user image" class="user-pfp">
-            </div>
 
-            {% else %}
-            <div class="header-auth">
-                
-                <a href="{{ url_for('login') }}" class="login-btn">
-                    Log in
-                </a>
-                
-                <a href="{{ url_for('register') }}" class="signup-btn">
-                    Sign up
-                </a>
-
-
-            </div>
-            {% endif %}
-
+        <div class="header-create-playlist-form">
+            <button class="header-create-playlist-btn" id="headerCreateBtn">
+                <span>
+                    + Playlist
+                </span>
+            </button>
         </div>
         
-        
+        {% if session.get("user_id") %}
+        <div class="user-header" id="userHeader">
+            <img src="{{ url_for('static', filename='assets/user.svg')}}" alt="user image" class="user-pfp">
+            <span class="user-name">{{ session.get("username") }}</span>
+
+            <div class="user-dropdown" id="userDropdown">
+                <a href="{{ url_for('logout') }}" class="user-dropdown-item">Log out</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="header-auth">
+            
+            <a href="{{ url_for('login') }}" class="login-btn">
+                Log in
+            </a>
+            
+            <a href="{{ url_for('register') }}" class="signup-btn">
+                Sign up
+            </a>
+
+
+        </div>
+        {% endif %}
+
     </div>
+    
+    
+</div>
+<div class="upload-modal" id="uploadModal">
+
+    <div class="upload-box">
+        <div class="upload-close" id="closeUpload">
+            ✕
+        </div>
+
+        
+        <h2>
+            Add music
+        </h2>
+        
+        <label class="upload-drop">
+            <img 
+            src="{{ url_for('static', filename='assets/upload_icon.svg')}}"
+            class="upload-big-icon"
+            id="uploadAnimation">
+
+            <div class="upload-drop-title">
+                Drop MP3 here
+            </div>
+
+            <div class="upload-drop-subtitle">
+                or click to browse
+            </div>
+
+            <input 
+            type="file"
+            id="songFile"
+            accept=".mp3"
+            hidden>
+
+        </label>
+
+
+        <div class="upload-progress-wrapper" id="uploadProgressWrapper">
+
+            <div class="upload-progress-text" id="uploadProgressText">
+                Uploading...
+            </div>
+            <div class="upload-progress">
+                <div 
+                class="upload-progress-fill"
+                id="uploadProgress">
+                </div>
+            </div>
+        </div>
+
+            <div id="uploadStatus">
+            </div>
+
+
+    </div>
+
+</div>

@@ -330,3 +330,18 @@ form{
     font-size: 13px;
     text-align: left;
 }
+
+.form-success {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+
+    background: rgba(90, 255, 140, .1);
+    border: 1px solid rgba(90, 255, 140, .35);
+    border-radius: 10px;
+
+    color: rgb(150, 255, 180);
+    font-size: 15px;
+    text-align: left;
+}

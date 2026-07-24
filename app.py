@@ -97,10 +97,10 @@ class DataBase:
                 VALUES (?,?,?)""",(username , email , password_hash))
 
             conn.commit()
-            return True
+            return cursor.lastrowid
         
         except sqlite3.IntegrityError:
-            return False
+            return None
         
         finally:
             conn.close()
@@ -353,7 +353,7 @@ def stream_music(filename):
     if not filename :
         abort(404) 
 
-    filepath = os.path.join(MUSIC_FOLDER , filename)
+    filepath = os.path.realpath(os.path.join(MUSIC_FOLDER , filename))
     music_root = os.path.realpath(MUSIC_FOLDER)
 
     if not filepath.startswith(music_root + os.sep):
@@ -499,18 +499,27 @@ def register():
         email = request.form["email"]
         password = request.form["password"]
 
-        success = database.add_user(
+        if database.get_user_by_username(username):
+            return jsonify({"success": False, "error": "That username is already taken."}), 409
+
+        if database.get_user_by_email(email):
+            return jsonify({"success": False, "error": "An account with that email already exists."}), 409
+
+        user_id = database.add_user(
             username,
             email,
             password
         )
 
-        if success:
-            return redirect(url_for("index"))
+        if user_id:
+            session["user_id"] = user_id
+            session["username"] = username
+            return jsonify({"success": True})
 
-        return "User already exists."
+        return jsonify({"success": False, "error": "User already exists."}), 409
 
     return render_template("register.html")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

@@ -57,3 +57,53 @@ registerForm.addEventListener("submit", (e) => {
         confirmInput.focus();
     }
 });
+
+const registerSuccess = document.getElementById("registerSuccess");
+const registerError = document.getElementById("registerError");
+
+registerForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (!checkPasswordsMatch() || !confirmInput.value) {
+        passwordError.textContent = "Passwords don't match";
+        confirmInput.classList.add("input-error");
+        confirmInput.focus();
+        return;
+    }
+
+    registerError.hidden = true;
+    registerError.textContent = "";
+
+    const submitBtn = registerForm.querySelector(".register-btn");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Creating account...";
+
+    try {
+        const formData = new FormData(registerForm);
+        const res = await fetch("/register", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            registerForm.style.display = "none";
+            registerSuccess.hidden = false;
+
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 3000);
+        } else {
+            registerError.textContent = data.error || "Something went wrong.";
+            registerError.hidden = false;
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Create Account";
+        }
+    } catch (err) {
+        registerError.textContent = "Network error, please try again.";
+        registerError.hidden = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Create Account";
+    }
+});

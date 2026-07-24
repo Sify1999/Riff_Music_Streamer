@@ -202,3 +202,17 @@ async function addToPlaylist(song , playlistId){
         })
     });
 }
+
+const userHeader = document.getElementById("userHeader");
+const userDropdown = document.getElementById("userDropdown");
+
+if (userHeader) {
+    userHeader.addEventListener("click", (e) => {
+        e.stopPropagation();
+        userDropdown.classList.toggle("active");
+    });
+
+    document.addEventListener("click", () => {
+        userDropdown.classList.remove("active");
+    });
+}
